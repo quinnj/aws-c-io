@@ -504,11 +504,7 @@ int aws_tls_client_handler_start_negotiation(struct aws_channel_handler *handler
         return s_drive_negotiation(handler);
     }
 
-    struct aws_channel_task *negotiation_task = aws_mem_acquire(handler->alloc, sizeof(struct aws_task));
-
-    if (!negotiation_task) {
-        return AWS_OP_ERR;
-    }
+    struct aws_channel_task *negotiation_task = aws_mem_acquire(handler->alloc, sizeof(struct aws_channel_task));
 
     aws_channel_task_init(
         negotiation_task, s_negotiation_task, handler, "secure_transport_channel_handler_start_negotiation");

@@ -534,6 +534,8 @@ void aws_channel_task_init(
     aws_channel_task_fn *task_fn,
     void *arg,
     const char *type_tag) {
+    AWS_LOGF_INFO(
+        AWS_LS_IO_CHANNEL, "initializing channel task with type tag %s. %d bytes", type_tag, sizeof(*channel_task));
     AWS_ZERO_STRUCT(*channel_task);
     channel_task->task_fn = task_fn;
     channel_task->arg = arg;
@@ -665,6 +667,7 @@ static void s_update_channel_slot_message_overheads(struct aws_channel *channel)
 }
 
 int aws_channel_slot_set_handler(struct aws_channel_slot *slot, struct aws_channel_handler *handler) {
+    AWS_LOGF_TRACE(AWS_LS_IO_CHANNEL, "slot=%p, handler=%p", (void *)slot, (void *)handler);
     slot->handler = handler;
     slot->handler->slot = slot;
     s_update_channel_slot_message_overheads(slot->channel);
@@ -797,7 +800,9 @@ int aws_channel_slot_send_message(
             (void *)slot->adj_right->handler);
         return aws_raise_error(AWS_IO_CHANNEL_READ_WOULD_EXCEED_WINDOW);
     }
-
+    AWS_LOGF_INFO(AWS_LS_IO_CHANNEL, "slot=%p", (void *)slot);
+    AWS_LOGF_INFO(AWS_LS_IO_CHANNEL, "slot->adj_left=%p", (void *)slot->adj_left);
+    AWS_LOGF_INFO(AWS_LS_IO_CHANNEL, "slot->adj_left->handler=%p", (void *)slot->adj_left->handler);
     AWS_ASSERT(slot->adj_left);
     AWS_ASSERT(slot->adj_left->handler);
     AWS_LOGF_TRACE(
